@@ -37,7 +37,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return successOfUnit();
       case Failure<String>(:final error):
         log(
-          'Error ao realizar login vom o google',
+          'Error ao realizar login com o google',
           name: 'AuthRepository',
           error: error,
         );
