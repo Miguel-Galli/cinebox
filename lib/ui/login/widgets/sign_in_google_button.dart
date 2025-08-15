@@ -7,10 +7,11 @@ import 'package:cinebox/ui/core/themes/text_styles.dart';
 
 class SignInGoogleButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool isLoading;
 
   const SignInGoogleButton({
     super.key,
-    required this.onPressed,
+    required this.onPressed, required this.isLoading,
   });
 
   @override
@@ -26,10 +27,24 @@ class SignInGoogleButton extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Image.asset(R.assetsImagesGoogleLogoPng),
+            child: Visibility(
+              visible: !isLoading,
+              replacement: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                    strokeWidth: 1,
+                  ),
+                ),
+              ),
+              child: Image.asset(R.assetsImagesGoogleLogoPng)
+              ),
           ),
           Text(
-            'Entrar com o google',
+            !isLoading ? 'Entrar com o google' : 'Realizando login...',
             style: TextStyle(fontSize: 14, color: AppColors.darkGrey),
           ),
         ],
