@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 
 import 'package:cinebox/ui/core/themes/colors.dart';
 import 'package:cinebox/ui/core/themes/resource.dart';
-import 'package:cinebox/ui/core/themes/text_styles.dart';
 
 class SignInGoogleButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool isLoading;
 
   const SignInGoogleButton({
     super.key,
     required this.onPressed,
+    required this.isLoading,
   });
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +29,24 @@ class SignInGoogleButton extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Image.asset(R.assetsImagesGoogleLogoPng),
+            child: Visibility(
+              visible: !isLoading,
+              replacement: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              child: Image.asset(R.assetsImagesGoogleLogoPng)
+            ),
           ),
           Text(
-            'Entrar com o google',
+            !isLoading ? 'Entrar com o google' : 'Realizando Login...',
             style: TextStyle(fontSize: 14, color: AppColors.darkGrey),
           ),
         ],

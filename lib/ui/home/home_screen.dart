@@ -1,15 +1,27 @@
+import 'package:cinebox/ui/home/widget/home_bottom_nav_bar.dart';
+import 'package:cinebox/ui/movies/movies_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
+class HomeScreen extends ConsumerStatefulWidget {
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      extendBody: true,
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 400),
+        transitionBuilder: (child, animation) => FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+        child: MoviesScreen()
+      ),
+      bottomNavigationBar: const HomeBottomNavBar(),
+    );
   }
 }

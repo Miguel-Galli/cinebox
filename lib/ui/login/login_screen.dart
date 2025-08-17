@@ -1,4 +1,6 @@
 import 'package:cinebox/ui/core/themes/resource.dart';
+import 'package:cinebox/ui/core/widgets/loader_messages.dart';
+import 'package:cinebox/ui/login/commands/login_with_google_command.dart';
 import 'package:cinebox/ui/login/widgets/login_view_model.dart';
 import 'package:cinebox/ui/login/widgets/sign_in_google_button.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +8,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> with LoaderMessages {
   @override
   Widget build(BuildContext context) {
-    
+    ref.listen(loginWithGoogleCommandProvider, (_, state) {
+      state.whenOrNull(
+        data: (_) {
+          Navigator.pushReplacementNamed(context, '/home');
+        },
+        error: (error, stackTrace) {
+          showErrorSnackBar('Erro ao realizar login');
+        },
+      );
+    });
 
     return Scaffold(
       body: Stack(
@@ -36,10 +47,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Image.asset(R.assetsImagesLogoPng),
                 Padding(
                   padding: EdgeInsetsGeometry.symmetric(horizontal: 24),
-                  child: SignInGoogleButton(
-                    onPressed: () {
-                      final viewModel = ref.read(loginViewModelProvider);
-                      viewModel.googleLogin();
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final state = ref.watch(loginWithGoogleCommandProvider);
+                      return SignInGoogleButton(
+                        isLoading: state.isLoading,
+                        onPressed: () {
+                          final viewModel = ref.read(loginViewModelProvider);
+                          viewModel.googleLogin();
+                        },
+                      );
                     },
                   ),
                 ),
